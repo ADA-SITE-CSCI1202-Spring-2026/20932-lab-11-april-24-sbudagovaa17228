@@ -29,21 +29,25 @@ class SharedResource {
     }
 }
 
-public class PCCoordination {
+public class WaitNotifyLab {
     public static void main(String[] args) {
         SharedResource resource = new SharedResource();
 
-        new Thread(() -> {
-            for (int i = 1; i <= 5; i++) {
+        Thread producer = new Thread(() -> {
+            for (int i = 1; i <= 10; i++) {
                 resource.set(i);
-                System.out.println("Set: " + i);
+                System.out.println("Produced: " + i);
             }
-        }).start();
+        });
 
-        new Thread(() -> {
-            for (int i = 1; i <= 5; i++) {
-                System.out.println("Got: " + resource.get());
+        Thread consumer = new Thread(() -> {
+            for (int i = 1; i <= 10; i++) {
+                int val = resource.get();
+                System.out.println("Consumed: " + val);
             }
-        }).start();
+        });
+
+        producer.start();
+        consumer.start();
     }
 }
